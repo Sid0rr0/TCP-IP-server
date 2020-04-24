@@ -1,0 +1,7 @@
+module.exports = {
+    AUTH_NAME: "AUTH_NAME",
+    AUTH_KEY: "AUTH_KEY",
+    RECHARGING: "RECHARGING",
+    MOVING: "MOVING",
+    PICKING: "PICKING"
+}
