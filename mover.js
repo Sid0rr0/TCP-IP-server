@@ -27,8 +27,15 @@ module.exports = class Mover {
         this.posY = y;
         this.movesCnt++;
 
+        if(this.movesCnt <= 2) {
+            if(this.prevPosX === this.posX && this.prevPosY === this.posY) {
+                this.movesCnt--;
+                return true;
+            }
+        }
+
         if(this.prevPosX === this.posX && this.prevPosY === this.posY) {
-            console.log(this.movesCnt + " POS: [" + this.posX + ", " + this.posY + "] not changed in update: " + this.direction);
+            //console.log(this.movesCnt + " POS: [" + this.posX + ", " + this.posY + "] not changed in update: " + this.direction);
             this.movesCnt++;
             return true;
         }
@@ -40,8 +47,7 @@ module.exports = class Mover {
             else
                 this.posY > this.prevPosY ? this.direction = Directions.UP : this.direction = Directions.DOWN;
         }
-
-        console.log(this.movesCnt + " POS: [" + this.posX + ", " + this.posY + "] " + this.direction);
+        //console.log(this.movesCnt + " POS: [" + this.posX + ", " + this.posY + "] " + this.direction);
 
         return true;
     }
@@ -64,42 +70,40 @@ module.exports = class Mover {
                 return Moves.TURN_RIGHT;
             } else {
                 this.atStart = true;
-                console.log("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww atStart");
                 this.updateDirection(Moves.TURN_RIGHT);
                 return Moves.TURN_RIGHT;
             }
         }
 
         if(this.posX > 2 && this.posX !== 2) {
-            console.log("posx > 2");
+            //console.log("posx > 2");
             if(this.direction !== Directions.LEFT) {
                 this.updateDirection(Moves.TURN_RIGHT);
                 return Moves.TURN_RIGHT;
             }
             return Moves.MOVE;
         } else if (this.posX < 2 && this.posX !== 2) {
-            console.log("posx < 2");
+            //console.log("posx < 2");
             if(this.direction !== Directions.RIGHT) {
                 this.updateDirection(Moves.TURN_RIGHT);
                 return Moves.TURN_RIGHT;
             }
             return Moves.MOVE;
         } else if(this.posY > 2 && this.posY !== 2) {
-            console.log("posy > 2");
+            //console.log("posy > 2");
             if(this.direction !== Directions.DOWN) {
                 this.updateDirection(Moves.TURN_RIGHT);
                 return Moves.TURN_RIGHT;
             }
             return Moves.MOVE;
         } else if(this.posY < 2 && this.posY !== 2) {
-            console.log("posy <  2");
+            //console.log("posy <  2");
             if(this.direction !== Directions.UP) {
                 this.updateDirection(Moves.TURN_RIGHT);
                 return Moves.TURN_RIGHT;
             }
             return Moves.MOVE;
         }
-
     }
 
     findTheMessage() {

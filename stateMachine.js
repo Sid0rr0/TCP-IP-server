@@ -49,9 +49,6 @@ module.exports = class StateMachine {
     }
 
     handleMessage(clientMessage) {
-        console.log(clientMessage.toString());
-        console.log("prevState: " + this.prev_state);
-        console.log("currState: " + this.curr_state);
         if(clientMessage === "RECHARGING") {
             this.prev_state = this.curr_state;
             this.curr_state = States.RECHARGING;
@@ -68,8 +65,6 @@ module.exports = class StateMachine {
                 } else {
                     this.curr_state = States.AUTH_KEY;
                     this.hashed_name = this.getHashName(clientMessage);
-                    //console.log(this.hashed_name);
-                    //console.log((this.hashed_name + this.server_key) % 65536);
                     return this.sender.send((this.hashed_name + this.server_key) % 65536);
                 }
             case "AUTH_KEY":
@@ -94,36 +89,23 @@ module.exports = class StateMachine {
                     this.socket.end();
                     return false;
                 } else {
-                    console.log("---------------------");
                     let [x, y] = this.parsePosition(clientMessage);
                     this.mover.updatePos(x, y);
 
-                    if(this.prev_state === States.PICKING) {
+                    if(this.mover.atStart) {
                         this.prev_state = this.curr_state;
-                        this.curr_state = States.MOVING;
-
-                        return this.sender.sendMove(this.mover.getMove());
-                    } else if(this.mover.atStart){
-                        console.log("sdfsdf666655");
                         this.curr_state = States.PICKING;
                         return this.sender.sendMove(Moves.PICK);
                     } else {
                         return this.sender.sendMove(this.mover.getMove());
                     }
-
-                    //todo dunno what happens when client doesnt move
-
-
                 }
             case "PICKING":
                 if(clientMessage !== "") {
-                    console.log("PIGLSDJFDSJFSs");
                     this.sender.sendLogout();
                     this.socket.end();
                     return true;
-                    //todo ?
                 } else {
-                    console.log("NOT HERE EMPTY MSG");
                     this.prev_state = this.curr_state;
                     this.curr_state = States.MOVING;
                     return this.sender.sendMove(this.mover.getMove());
